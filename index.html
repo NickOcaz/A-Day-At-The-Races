@@ -5,37 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Day at the Races</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .center-button {
+            display: flex;
+            justify-content: center;
+        }
+        .notification-card, .winner-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        .center-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .header {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+    </style>
 </head>
 <body>
-    <div id="start-screen">
+    <div class="header">
+        <div id="high-score">
+            High Score: <span id="high-score-value">0</span> coins
+        </div>
+        <div id="bank">
+            Bank: <span id="bank-value">0</span> coins
+        </div>
+    </div>
+    <div id="start-screen" class="center-content">
         <img src="startImg.png" alt="A Day at the Races" class="start-image">
-        <button class="start-button" onclick="startGame()">Start Game</button>
+        <div class="center-button">
+            <button class="start-button" onclick="showBettingScreen()">Add Coins</button>
+        </div>
         <p>Welcome to A Day at the Races! Start with 10 coins and try to win big by betting on your favorite horse!</p>
     </div>
-    
-
-    <div id="betting-screen" style="display: none;">
-        <h1>A Day at the Races</h1>
+    <div id="betting-screen" class="center-content" style="display: none;">
+        <h1>Place Your Bet</h1>
         <div id="betting">
             <div>
-                <label for="bet-slider">Bet amount (1-10 coins):</label>
-                <input type="range" id="bet-slider" min="1" max="10" value="1">
+                <label for="bet-slider">Bet amount (1-<span id="available-balance">10</span> coins):</label>
+                <input type="range" id="bet-slider" min="1" max="10" value="1" oninput="updateBetAmount()">
                 <span id="bet-amount">1</span> coins
             </div>
             <div>
                 <label>Select your horse:</label>
-                <button class="horse-select" data-horse="1" style="background-color: blue;">Blue Horse</button>
-                <button class="horse-select" data-horse="2" style="background-color: red;">Red Horse</button>
-                <button class="horse-select" data-horse="3" style="background-color: green;">Green Horse</button>
-                <button class="horse-select" data-horse="4" style="background-color: pink;">Pink Horse</button>
+                <div class="center-button">
+                    <button class="horse-select" data-horse="1" style="background-color: blue;" onclick="selectHorse(1)">Mr. Blue</button>
+                    <button class="horse-select" data-horse="2" style="background-color: red;" onclick="selectHorse(2)">Red Rocket</button>
+                    <button class="horse-select" data-horse="3" style="background-color: green;" onclick="selectHorse(3)">Green Thunder</button>
+                    <button class="horse-select" data-horse="4" style="background-color: pink;" onclick="selectHorse(4)">Pink Lightning</button>
+                </div>
             </div>
             <p>You've chosen: <span id="chosen-horse">None</span></p>
-            <button id="start-button" onclick="prepareRace()">Start Race</button>
+            <div class="center-button">
+                <button onclick="startRace()">Start Race</button>
+            </div>
         </div>
     </div>
-    <div id="game-screen" style="display: none;">
+    <div id="game-screen" class="center-content" style="display: none;">
         <h1>A Day at the Races</h1>
-        <p>Coins: <span id="coins">10</span></p>
+        <p>Balance: <span id="coins">0</span> coins</p>
+        <p>Bet Amount: <span id="current-bet-amount">1</span> coins</p>
+        <p>Horse Bet On: <span id="current-chosen-horse">None</span></p>
         <div class="race-track">
             <div class="lane" id="lane1">
                 <div class="runner horse" id="runner1" style="color: blue;">🐎</div>
@@ -52,37 +98,23 @@
         </div>
         <p id="result-message"></p>
     </div>
-    
-
-
-
-
-
+    <div id="result-popup" class="center-content" style="display: none;">
+        <h1>Race Result</h1>
+        <p id="result-message-popup"></p>
+        <button id="next-race-button" onclick="nextRace()">Next Race</button>
+        <button id="back-to-menu-button" onclick="backToMenu()">Back to Menu</button>
+        <p id="no-funds-message" style="display: none; color: red;">Sorry, you have no funds to bid on the next race.</p>
     </div>
-    <div id="loser-screen" style="display: none;">
-        <h1>Game Over</h1>
-        <p>You've run out of coins. Better luck next time!</p>
-        <button onclick="restartGame()">Restart Game</button>
+    <div id="notification-card" class="notification-card">
+        <h1>Notification</h1>
+        <p id="notification-message"></p>
+        <button onclick="closeNotification()">OK</button>
     </div>
-    <div id="winner-screen" style="display: none;">
-        <h1>Congratulations!</h1>
-        <p>You've won 1000 coins! You're a champion!</p>
-        <button onclick="restartGame()">Restart Game</button>
+    <div id="winner-card" class="winner-card">
+        <h1>Winner</h1>
+        <p id="winner-message"></p>
+        <button onclick="closeWinnerCard()">OK</button>
     </div>
-    <div id="win-popup" style="display: none;">
-        <p id="win-message"></p>
-    </div>
-    <div id="lose-popup" style="display: none;">
-        <p id="lose-message"></p>
-    </div>
-
-    <div id="win-popup" style="display: none;">
-        <p id="win-message"></p>
-    </div>
-    <div id="lose-popup" style="display: none;">
-        <p id="lose-message"></p>
-    </div>
-
     <script src="script.js"></script>
 </body>
 </html>
