@@ -1,0 +1,175 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    padding: 20px;
+    position: relative;
+}
+
+#start-screen img {
+    max-height: 100%;
+}
+
+#start-screen .start-button {
+    position: absolute;
+    bottom: 20%;
+    padding: 10px 20px;
+    font-size: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 200px;
+    height: 50px;
+    box-shadow: 0 0 10px 10px #000000;
+    font-size: 26px;
+}
+
+#betting {
+    margin-bottom: 10px;
+}
+
+.race-track {
+    position: relative;
+    width: 100%;
+    height: 160px;
+    border: 2px solid #000;
+    margin: 0 auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.lane {
+    flex: 1;
+    position: relative;
+}
+
+#lane1 {
+    background-color: lightblue;
+}
+
+#lane2 {
+    background-color: lightcoral;
+}
+
+#lane3 {
+    background-color: lightgreen;
+}
+
+#lane4 {
+    background-color: lightpink;
+}
+
+.runner {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.horse {
+    animation: run 0.5s steps(4) infinite;
+}
+
+@keyframes run {
+    0% { background-position: 0; }
+    100% { background-position: -120px; }
+}
+
+.horse-select {
+    margin: 2px;
+    padding: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#bet-slider {
+    width: 80px;
+}
+
+@media only screen and (orientation: landscape) and (max-width: 768px) {
+    body {
+        font-size: 90%;
+    }
+
+    .race-track {
+        height: 140px;
+    }
+
+    .runner {
+        width: 25px;
+        height: 25px;
+        line-height: 25px;
+        font-size: 18px;
+    }
+
+    .lane {
+        height: 35px;
+    }
+}
+
+#win-popup, #lose-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    font-size: 20px;
+    background-color: transparent;
+    text-align: center;
+    z-index: 1000;
+}
+
+#win-popup .sparkles, #lose-popup .sparkles {
+    animation: sparkles 1s infinite;
+}
+
+@keyframes sparkles {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+#win-popup, #lose-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    font-size: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    text-align: center;
+    z-index: 1000;
+}
+
+.sparkles {
+    animation: sparkles 1s infinite;
+}
+
+@keyframes sparkles {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
